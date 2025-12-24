@@ -234,63 +234,10 @@ void Menu::renderButton(const MenuButton& btn, float baseR, float baseG, float b
     glVertex2f(btn.x, btn.y + btn.height);
     glEnd();
     
-    // Button text
+    // Button text (centered)
     int textX = btn.x + (btn.width - btn.text.length() * 8) / 2;
     int textY = btn.y + (btn.height - 16) / 2;
     
-    // Text shadow
-    glColor3f(0.0f, 0.0f, 0.0f);
-    glRasterPos2i(textX + 2, textY + 14);
-    
-    // Text
-    glColor3f(1.0f, 1.0f, 1.0f);
-    glRasterPos2i(textX, textY + 12);
-}
-
-void Menu::renderButton(const MenuButton& btn, float baseR, float baseG, float baseB) {
-    static float animTime = 0.0f;
-    animTime += 0.05f;
-    
-    float hoverBoost = btn.hovered ? 0.3f : 0.0f;
-    float pulse = btn.hovered ? 0.1f * sin(animTime * 3.0f) : 0.0f;
-    
-    // Button shadow
-    glColor4f(0.0f, 0.0f, 0.0f, 0.5f);
-    glBegin(GL_QUADS);
-    glVertex2f(btn.x + 4, btn.y + 4);
-    glVertex2f(btn.x + btn.width + 4, btn.y + 4);
-    glVertex2f(btn.x + btn.width + 4, btn.y + btn.height + 4);
-    glVertex2f(btn.x + 4, btn.y + btn.height + 4);
-    glEnd();
-    
-    // Button background
-    glColor3f(baseR + hoverBoost + pulse, baseG + hoverBoost + pulse, baseB + hoverBoost + pulse);
-    glBegin(GL_QUADS);
-    glVertex2f(btn.x, btn.y);
-    glVertex2f(btn.x + btn.width, btn.y);
-    glVertex2f(btn.x + btn.width, btn.y + btn.height);
-    glVertex2f(btn.x, btn.y + btn.height);
-    glEnd();
-    
-    // Button border
-    glColor3f(0.8f, 0.8f, 0.8f);
-    glLineWidth(2.0f);
-    glBegin(GL_LINE_LOOP);
-    glVertex2f(btn.x, btn.y);
-    glVertex2f(btn.x + btn.width, btn.y);
-    glVertex2f(btn.x + btn.width, btn.y + btn.height);
-    glVertex2f(btn.x, btn.y + btn.height);
-    glEnd();
-    
-    // Button text
-    int textX = btn.x + (btn.width - btn.text.length() * 8) / 2;
-    int textY = btn.y + (btn.height - 16) / 2;
-    
-    // Text shadow
-    glColor3f(0.0f, 0.0f, 0.0f);
-    glRasterPos2i(textX + 2, textY + 14);
-    
-    // Text
     glColor3f(1.0f, 1.0f, 1.0f);
     glRasterPos2i(textX, textY + 12);
 }
@@ -307,7 +254,7 @@ void Menu::renderMainMenu(Renderer& renderer) {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     
-    // Background with gradient
+    // Background gradient
     glBegin(GL_QUADS);
     glColor3f(0.1f, 0.0f, 0.0f);
     glVertex2f(0, 0);
@@ -317,7 +264,7 @@ void Menu::renderMainMenu(Renderer& renderer) {
     glVertex2f(0, screenHeight);
     glEnd();
     
-    // Title backdrop
+    // Title backdrop with glow
     float titleGlow = 0.1f + 0.05f * sin(titlePulse);
     glColor4f(titleGlow, 0.0f, 0.0f, 0.6f);
     glBegin(GL_QUADS);
@@ -334,10 +281,6 @@ void Menu::renderMainMenu(Renderer& renderer) {
     
     glColor3f(0.7f, 0.7f, 0.7f);
     glRasterPos2i(screenWidth/2 - 80, 180);
-    
-    // Subtitle
-    glColor3f(0.5f, 0.5f, 0.5f);
-    glRasterPos2i(screenWidth/2 - 200, 250);
     
     // Render buttons
     for (const auto& btn : buttons) {
@@ -390,7 +333,7 @@ void Menu::renderControlSelect(Renderer& renderer) {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     
-    // Background
+    // Background gradient
     glBegin(GL_QUADS);
     glColor3f(0.05f, 0.05f, 0.08f);
     glVertex2f(0, 0);
@@ -411,13 +354,6 @@ void Menu::renderControlSelect(Renderer& renderer) {
     
     glColor3f(1.0f, 0.9f, 0.5f);
     glRasterPos2i(screenWidth/2 - 180, 120);
-    
-    // Instructions
-    glColor3f(0.8f, 0.8f, 0.8f);
-    glRasterPos2i(screenWidth/2 - 220, 200);
-    
-    glColor3f(0.7f, 0.7f, 0.7f);
-    glRasterPos2i(screenWidth/2 - 250, 230);
     
     for (const auto& btn : buttons) {
         if (btn.text == "BACK") {
@@ -464,9 +400,6 @@ void Menu::renderGameOverMenu(Renderer& renderer) {
     glColor3f(textIntensity, 0.0f, 0.0f);
     glRasterPos2i(screenWidth/2 - 120, 180);
     
-    glColor3f(0.6f, 0.6f, 0.6f);
-    glRasterPos2i(screenWidth/2 - 200, 240);
-    
     for (const auto& btn : buttons) {
         renderButton(btn, 0.3f, 0.05f, 0.05f);
     }
@@ -507,12 +440,6 @@ void Menu::renderVictoryMenu(Renderer& renderer) {
     float titleGlow = 0.6f + 0.4f * sin(victoryPulse * 2);
     glColor3f(0.2f, titleGlow, 0.2f);
     glRasterPos2i(screenWidth/2 - 150, 160);
-    
-    glColor3f(0.7f, 0.7f, 0.7f);
-    glRasterPos2i(screenWidth/2 - 250, 220);
-    
-    glColor3f(0.6f, 0.8f, 0.6f);
-    glRasterPos2i(screenWidth/2 - 200, 270);
     
     for (const auto& btn : buttons) {
         renderButton(btn, 0.05f, 0.25f, 0.05f);
