@@ -3,6 +3,7 @@
 
 #include <string>
 #include <map>
+#include "Game.h"
 
 // Simple audio manager - in full implementation would use SDL_mixer or similar
 class AudioManager {

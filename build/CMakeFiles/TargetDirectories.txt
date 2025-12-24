@@ -1,0 +1,3 @@
+/workspaces/Horror-game-demo/build/CMakeFiles/MansionHorror.dir
+/workspaces/Horror-game-demo/build/CMakeFiles/edit_cache.dir
+/workspaces/Horror-game-demo/build/CMakeFiles/rebuild_cache.dir
