@@ -42,6 +42,7 @@ private:
     void setupGameOverMenu();
     void setupVictoryMenu();
     
+    void renderButton(const MenuButton& button, float baseR, float baseG, float baseB);
     void renderMainMenu(Renderer& renderer);
     void renderPauseMenu(Renderer& renderer);
     void renderControlSelect(Renderer& renderer);
