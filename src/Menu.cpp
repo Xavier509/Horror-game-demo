@@ -2,6 +2,7 @@
 #include "Renderer.h"
 #include "InputHandler.h"
 #include <GL/gl.h>
+#include <cmath>
 
 Menu::Menu(Game* game)
     : game(game), currentMenu(MenuType::MAIN_MENU),
@@ -14,64 +15,36 @@ void Menu::setMenuType(MenuType type) {
     buttons.clear();
     
     switch (type) {
-        case MenuType::MAIN_MENU:
-            setupMainMenu();
-            break;
-        case MenuType::PAUSE_MENU:
-            setupPauseMenu();
-            break;
-        case MenuType::CONTROL_SELECT:
-            setupControlSelect();
-            break;
-        case MenuType::GAME_OVER_MENU:
-            setupGameOverMenu();
-            break;
-        case MenuType::VICTORY_MENU:
-            setupVictoryMenu();
-            break;
-        default:
-            break;
+        case MenuType::MAIN_MENU: setupMainMenu(); break;
+        case MenuType::PAUSE_MENU: setupPauseMenu(); break;
+        case MenuType::CONTROL_SELECT: setupControlSelect(); break;
+        case MenuType::GAME_OVER_MENU: setupGameOverMenu(); break;
+        case MenuType::VICTORY_MENU: setupVictoryMenu(); break;
+        default: break;
     }
 }
 
 void Menu::setupMainMenu() {
     int centerX = screenWidth / 2;
-    int startY = screenHeight / 2 - 100;
-    int buttonWidth = 200;
-    int buttonHeight = 50;
-    int spacing = 70;
+    int startY = screenHeight / 2 - 50;
+    int buttonWidth = 240;
+    int buttonHeight = 60;
+    int spacing = 80;
     
-    // Play button
     MenuButton playBtn;
-    playBtn.text = "PLAY";
+    playBtn.text = "PLAY GAME";
     playBtn.x = centerX - buttonWidth / 2;
     playBtn.y = startY;
     playBtn.width = buttonWidth;
     playBtn.height = buttonHeight;
     playBtn.hovered = false;
-    playBtn.onClick = [this]() {
-        setMenuType(MenuType::CONTROL_SELECT);
-    };
+    playBtn.onClick = [this]() { setMenuType(MenuType::CONTROL_SELECT); };
     buttons.push_back(playBtn);
     
-    // Settings button
-    MenuButton settingsBtn;
-    settingsBtn.text = "SETTINGS";
-    settingsBtn.x = centerX - buttonWidth / 2;
-    settingsBtn.y = startY + spacing;
-    settingsBtn.width = buttonWidth;
-    settingsBtn.height = buttonHeight;
-    settingsBtn.hovered = false;
-    settingsBtn.onClick = []() {
-        // TODO: Implement settings menu
-    };
-    buttons.push_back(settingsBtn);
-    
-    // Quit button
     MenuButton quitBtn;
     quitBtn.text = "QUIT";
     quitBtn.x = centerX - buttonWidth / 2;
-    quitBtn.y = startY + spacing * 2;
+    quitBtn.y = startY + spacing;
     quitBtn.width = buttonWidth;
     quitBtn.height = buttonHeight;
     quitBtn.hovered = false;
@@ -85,14 +58,13 @@ void Menu::setupMainMenu() {
 
 void Menu::setupControlSelect() {
     int centerX = screenWidth / 2;
-    int startY = screenHeight / 2 - 50;
-    int buttonWidth = 250;
-    int buttonHeight = 50;
-    int spacing = 70;
+    int startY = screenHeight / 2 - 70;
+    int buttonWidth = 300;
+    int buttonHeight = 60;
+    int spacing = 80;
     
-    // Desktop controls button
     MenuButton desktopBtn;
-    desktopBtn.text = "DESKTOP (WASD + Mouse)";
+    desktopBtn.text = "DESKTOP CONTROLS";
     desktopBtn.x = centerX - buttonWidth / 2;
     desktopBtn.y = startY;
     desktopBtn.width = buttonWidth;
@@ -104,9 +76,8 @@ void Menu::setupControlSelect() {
     };
     buttons.push_back(desktopBtn);
     
-    // Mobile controls button
     MenuButton mobileBtn;
-    mobileBtn.text = "MOBILE (Touch)";
+    mobileBtn.text = "MOBILE CONTROLS";
     mobileBtn.x = centerX - buttonWidth / 2;
     mobileBtn.y = startY + spacing;
     mobileBtn.width = buttonWidth;
@@ -118,7 +89,6 @@ void Menu::setupControlSelect() {
     };
     buttons.push_back(mobileBtn);
     
-    // Back button
     MenuButton backBtn;
     backBtn.text = "BACK";
     backBtn.x = centerX - buttonWidth / 2;
@@ -126,20 +96,17 @@ void Menu::setupControlSelect() {
     backBtn.width = buttonWidth;
     backBtn.height = buttonHeight;
     backBtn.hovered = false;
-    backBtn.onClick = [this]() {
-        setMenuType(MenuType::MAIN_MENU);
-    };
+    backBtn.onClick = [this]() { setMenuType(MenuType::MAIN_MENU); };
     buttons.push_back(backBtn);
 }
 
 void Menu::setupPauseMenu() {
     int centerX = screenWidth / 2;
     int startY = screenHeight / 2 - 50;
-    int buttonWidth = 200;
-    int buttonHeight = 50;
-    int spacing = 70;
+    int buttonWidth = 240;
+    int buttonHeight = 60;
+    int spacing = 80;
     
-    // Resume button
     MenuButton resumeBtn;
     resumeBtn.text = "RESUME";
     resumeBtn.x = centerX - buttonWidth / 2;
@@ -147,12 +114,9 @@ void Menu::setupPauseMenu() {
     resumeBtn.width = buttonWidth;
     resumeBtn.height = buttonHeight;
     resumeBtn.hovered = false;
-    resumeBtn.onClick = [this]() {
-        game->setState(GameState::PLAYING);
-    };
+    resumeBtn.onClick = [this]() { game->setState(GameState::PLAYING); };
     buttons.push_back(resumeBtn);
     
-    // Main menu button
     MenuButton mainMenuBtn;
     mainMenuBtn.text = "MAIN MENU";
     mainMenuBtn.x = centerX - buttonWidth / 2;
@@ -169,12 +133,11 @@ void Menu::setupPauseMenu() {
 
 void Menu::setupGameOverMenu() {
     int centerX = screenWidth / 2;
-    int startY = screenHeight / 2;
-    int buttonWidth = 200;
-    int buttonHeight = 50;
-    int spacing = 70;
+    int startY = screenHeight / 2 + 50;
+    int buttonWidth = 240;
+    int buttonHeight = 60;
+    int spacing = 80;
     
-    // Retry button
     MenuButton retryBtn;
     retryBtn.text = "RETRY";
     retryBtn.x = centerX - buttonWidth / 2;
@@ -182,13 +145,9 @@ void Menu::setupGameOverMenu() {
     retryBtn.width = buttonWidth;
     retryBtn.height = buttonHeight;
     retryBtn.hovered = false;
-    retryBtn.onClick = [this]() {
-        // Would reset game state here
-        game->setState(GameState::PLAYING);
-    };
+    retryBtn.onClick = [this]() { game->setState(GameState::PLAYING); };
     buttons.push_back(retryBtn);
     
-    // Main menu button
     MenuButton mainMenuBtn;
     mainMenuBtn.text = "MAIN MENU";
     mainMenuBtn.x = centerX - buttonWidth / 2;
@@ -205,11 +164,10 @@ void Menu::setupGameOverMenu() {
 
 void Menu::setupVictoryMenu() {
     int centerX = screenWidth / 2;
-    int startY = screenHeight / 2 + 50;
-    int buttonWidth = 200;
-    int buttonHeight = 50;
+    int startY = screenHeight / 2 + 80;
+    int buttonWidth = 240;
+    int buttonHeight = 60;
     
-    // Main menu button
     MenuButton mainMenuBtn;
     mainMenuBtn.text = "MAIN MENU";
     mainMenuBtn.x = centerX - buttonWidth / 2;
@@ -232,28 +190,67 @@ void Menu::update(const InputHandler& input) {
 
 void Menu::render(Renderer& renderer) {
     switch (currentMenu) {
-        case MenuType::MAIN_MENU:
-            renderMainMenu(renderer);
-            break;
-        case MenuType::PAUSE_MENU:
-            renderPauseMenu(renderer);
-            break;
-        case MenuType::CONTROL_SELECT:
-            renderControlSelect(renderer);
-            break;
-        case MenuType::GAME_OVER_MENU:
-            renderGameOverMenu(renderer);
-            break;
-        case MenuType::VICTORY_MENU:
-            renderVictoryMenu(renderer);
-            break;
-        default:
-            break;
+        case MenuType::MAIN_MENU: renderMainMenu(renderer); break;
+        case MenuType::PAUSE_MENU: renderPauseMenu(renderer); break;
+        case MenuType::CONTROL_SELECT: renderControlSelect(renderer); break;
+        case MenuType::GAME_OVER_MENU: renderGameOverMenu(renderer); break;
+        case MenuType::VICTORY_MENU: renderVictoryMenu(renderer); break;
+        default: break;
     }
 }
 
+void Menu::renderButton(const MenuButton& btn, float baseR, float baseG, float baseB) {
+    static float animTime = 0.0f;
+    animTime += 0.05f;
+    
+    float hoverBoost = btn.hovered ? 0.3f : 0.0f;
+    float pulse = btn.hovered ? 0.1f * sin(animTime * 3.0f) : 0.0f;
+    
+    // Button shadow
+    glColor4f(0.0f, 0.0f, 0.0f, 0.5f);
+    glBegin(GL_QUADS);
+    glVertex2f(btn.x + 4, btn.y + 4);
+    glVertex2f(btn.x + btn.width + 4, btn.y + 4);
+    glVertex2f(btn.x + btn.width + 4, btn.y + btn.height + 4);
+    glVertex2f(btn.x + 4, btn.y + btn.height + 4);
+    glEnd();
+    
+    // Button background
+    glColor3f(baseR + hoverBoost + pulse, baseG + hoverBoost + pulse, baseB + hoverBoost + pulse);
+    glBegin(GL_QUADS);
+    glVertex2f(btn.x, btn.y);
+    glVertex2f(btn.x + btn.width, btn.y);
+    glVertex2f(btn.x + btn.width, btn.y + btn.height);
+    glVertex2f(btn.x, btn.y + btn.height);
+    glEnd();
+    
+    // Button border
+    glColor3f(0.8f, 0.8f, 0.8f);
+    glLineWidth(2.0f);
+    glBegin(GL_LINE_LOOP);
+    glVertex2f(btn.x, btn.y);
+    glVertex2f(btn.x + btn.width, btn.y);
+    glVertex2f(btn.x + btn.width, btn.y + btn.height);
+    glVertex2f(btn.x, btn.y + btn.height);
+    glEnd();
+    
+    // Button text
+    int textX = btn.x + (btn.width - btn.text.length() * 8) / 2;
+    int textY = btn.y + (btn.height - 16) / 2;
+    
+    // Text shadow
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glRasterPos2i(textX + 2, textY + 14);
+    
+    // Text
+    glColor3f(1.0f, 1.0f, 1.0f);
+    glRasterPos2i(textX, textY + 12);
+}
+
 void Menu::renderMainMenu(Renderer& renderer) {
-    // Background overlay
+    static float titlePulse = 0.0f;
+    titlePulse += 0.03f;
+    
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_LIGHTING);
     glMatrixMode(GL_PROJECTION);
@@ -262,34 +259,41 @@ void Menu::renderMainMenu(Renderer& renderer) {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     
-    // Semi-transparent background
-    glColor4f(0.0f, 0.0f, 0.0f, 0.8f);
+    // Background with gradient
     glBegin(GL_QUADS);
+    glColor3f(0.1f, 0.0f, 0.0f);
     glVertex2f(0, 0);
     glVertex2f(screenWidth, 0);
+    glColor3f(0.0f, 0.0f, 0.05f);
     glVertex2f(screenWidth, screenHeight);
     glVertex2f(0, screenHeight);
     glEnd();
     
-    // Title
-    renderer.renderText("MANSION HORROR", screenWidth / 2 - 100, 150, 0.8f, 0.1f, 0.1f);
-    renderer.renderText("2003", screenWidth / 2 - 30, 200, 0.6f, 0.6f, 0.6f);
+    // Title backdrop
+    float titleGlow = 0.1f + 0.05f * sin(titlePulse);
+    glColor4f(titleGlow, 0.0f, 0.0f, 0.6f);
+    glBegin(GL_QUADS);
+    glVertex2f(screenWidth/2 - 350, 80);
+    glVertex2f(screenWidth/2 + 350, 80);
+    glVertex2f(screenWidth/2 + 350, 220);
+    glVertex2f(screenWidth/2 - 350, 220);
+    glEnd();
+    
+    // Title text
+    float titleR = 0.9f + 0.1f * sin(titlePulse);
+    glColor3f(titleR, 0.1f, 0.1f);
+    glRasterPos2i(screenWidth/2 - 200, 130);
+    
+    glColor3f(0.7f, 0.7f, 0.7f);
+    glRasterPos2i(screenWidth/2 - 80, 180);
+    
+    // Subtitle
+    glColor3f(0.5f, 0.5f, 0.5f);
+    glRasterPos2i(screenWidth/2 - 200, 250);
     
     // Render buttons
-    for (const auto& button : buttons) {
-        float r = button.hovered ? 0.8f : 0.4f;
-        float g = button.hovered ? 0.2f : 0.2f;
-        float b = button.hovered ? 0.2f : 0.2f;
-        
-        glColor3f(r, g, b);
-        glBegin(GL_QUADS);
-        glVertex2f(button.x, button.y);
-        glVertex2f(button.x + button.width, button.y);
-        glVertex2f(button.x + button.width, button.y + button.height);
-        glVertex2f(button.x, button.y + button.height);
-        glEnd();
-        
-        renderer.renderText(button.text, button.x + 20, button.y + 20, 1.0f, 1.0f, 1.0f);
+    for (const auto& btn : buttons) {
+        renderButton(btn, 0.2f, 0.05f, 0.05f);
     }
 }
 
@@ -302,7 +306,8 @@ void Menu::renderPauseMenu(Renderer& renderer) {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     
-    glColor4f(0.0f, 0.0f, 0.0f, 0.7f);
+    // Semi-transparent overlay
+    glColor4f(0.0f, 0.0f, 0.0f, 0.75f);
     glBegin(GL_QUADS);
     glVertex2f(0, 0);
     glVertex2f(screenWidth, 0);
@@ -310,22 +315,21 @@ void Menu::renderPauseMenu(Renderer& renderer) {
     glVertex2f(0, screenHeight);
     glEnd();
     
-    renderer.renderText("PAUSED", screenWidth / 2 - 50, 150, 1.0f, 1.0f, 1.0f);
+    // Pause panel
+    glColor4f(0.1f, 0.1f, 0.15f, 0.9f);
+    glBegin(GL_QUADS);
+    glVertex2f(screenWidth/2 - 300, 100);
+    glVertex2f(screenWidth/2 + 300, 100);
+    glVertex2f(screenWidth/2 + 300, screenHeight - 100);
+    glVertex2f(screenWidth/2 - 300, screenHeight - 100);
+    glEnd();
     
-    for (const auto& button : buttons) {
-        float r = button.hovered ? 0.6f : 0.3f;
-        float g = button.hovered ? 0.6f : 0.3f;
-        float b = button.hovered ? 0.8f : 0.4f;
-        
-        glColor3f(r, g, b);
-        glBegin(GL_QUADS);
-        glVertex2f(button.x, button.y);
-        glVertex2f(button.x + button.width, button.y);
-        glVertex2f(button.x + button.width, button.y + button.height);
-        glVertex2f(button.x, button.y + button.height);
-        glEnd();
-        
-        renderer.renderText(button.text, button.x + 20, button.y + 20, 1.0f, 1.0f, 1.0f);
+    // Title
+    glColor3f(1.0f, 1.0f, 1.0f);
+    glRasterPos2i(screenWidth/2 - 80, 170);
+    
+    for (const auto& btn : buttons) {
+        renderButton(btn, 0.15f, 0.15f, 0.25f);
     }
 }
 
@@ -338,34 +342,48 @@ void Menu::renderControlSelect(Renderer& renderer) {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     
-    glColor4f(0.0f, 0.0f, 0.0f, 0.9f);
+    // Background
     glBegin(GL_QUADS);
+    glColor3f(0.05f, 0.05f, 0.08f);
     glVertex2f(0, 0);
     glVertex2f(screenWidth, 0);
+    glColor3f(0.02f, 0.02f, 0.05f);
     glVertex2f(screenWidth, screenHeight);
     glVertex2f(0, screenHeight);
     glEnd();
     
-    renderer.renderText("SELECT CONTROL MODE", screenWidth / 2 - 120, 150, 1.0f, 1.0f, 1.0f);
+    // Title panel
+    glColor4f(0.15f, 0.1f, 0.1f, 0.8f);
+    glBegin(GL_QUADS);
+    glVertex2f(screenWidth/2 - 300, 80);
+    glVertex2f(screenWidth/2 + 300, 80);
+    glVertex2f(screenWidth/2 + 300, 160);
+    glVertex2f(screenWidth/2 - 300, 160);
+    glEnd();
     
-    for (const auto& button : buttons) {
-        float r = button.hovered ? 0.8f : 0.4f;
-        float g = button.hovered ? 0.6f : 0.4f;
-        float b = button.hovered ? 0.2f : 0.2f;
-        
-        glColor3f(r, g, b);
-        glBegin(GL_QUADS);
-        glVertex2f(button.x, button.y);
-        glVertex2f(button.x + button.width, button.y);
-        glVertex2f(button.x + button.width, button.y + button.height);
-        glVertex2f(button.x, button.y + button.height);
-        glEnd();
-        
-        renderer.renderText(button.text, button.x + 20, button.y + 20, 1.0f, 1.0f, 1.0f);
+    glColor3f(1.0f, 0.9f, 0.5f);
+    glRasterPos2i(screenWidth/2 - 180, 120);
+    
+    // Instructions
+    glColor3f(0.8f, 0.8f, 0.8f);
+    glRasterPos2i(screenWidth/2 - 220, 200);
+    
+    glColor3f(0.7f, 0.7f, 0.7f);
+    glRasterPos2i(screenWidth/2 - 250, 230);
+    
+    for (const auto& btn : buttons) {
+        if (btn.text == "BACK") {
+            renderButton(btn, 0.2f, 0.1f, 0.1f);
+        } else {
+            renderButton(btn, 0.1f, 0.2f, 0.1f);
+        }
     }
 }
 
 void Menu::renderGameOverMenu(Renderer& renderer) {
+    static float deathPulse = 0.0f;
+    deathPulse += 0.08f;
+    
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_LIGHTING);
     glMatrixMode(GL_PROJECTION);
@@ -374,32 +392,42 @@ void Menu::renderGameOverMenu(Renderer& renderer) {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     
-    glColor4f(0.2f, 0.0f, 0.0f, 0.9f);
+    // Red tinted background
+    float redPulse = 0.15f + 0.1f * sin(deathPulse);
     glBegin(GL_QUADS);
+    glColor3f(redPulse, 0.0f, 0.0f);
     glVertex2f(0, 0);
     glVertex2f(screenWidth, 0);
+    glColor3f(0.05f, 0.0f, 0.0f);
     glVertex2f(screenWidth, screenHeight);
     glVertex2f(0, screenHeight);
     glEnd();
     
-    renderer.renderText("YOU DIED", screenWidth / 2 - 70, 200, 1.0f, 0.0f, 0.0f);
+    // Death message panel
+    glColor4f(0.2f, 0.0f, 0.0f, 0.8f);
+    glBegin(GL_QUADS);
+    glVertex2f(screenWidth/2 - 350, 120);
+    glVertex2f(screenWidth/2 + 350, 120);
+    glVertex2f(screenWidth/2 + 350, 280);
+    glVertex2f(screenWidth/2 - 350, 280);
+    glEnd();
     
-    for (const auto& button : buttons) {
-        float r = button.hovered ? 0.8f : 0.5f;
-        
-        glColor3f(r, 0.2f, 0.2f);
-        glBegin(GL_QUADS);
-        glVertex2f(button.x, button.y);
-        glVertex2f(button.x + button.width, button.y);
-        glVertex2f(button.x + button.width, button.y + button.height);
-        glVertex2f(button.x, button.y + button.height);
-        glEnd();
-        
-        renderer.renderText(button.text, button.x + 20, button.y + 20, 1.0f, 1.0f, 1.0f);
+    float textIntensity = 0.7f + 0.3f * sin(deathPulse * 2);
+    glColor3f(textIntensity, 0.0f, 0.0f);
+    glRasterPos2i(screenWidth/2 - 120, 180);
+    
+    glColor3f(0.6f, 0.6f, 0.6f);
+    glRasterPos2i(screenWidth/2 - 200, 240);
+    
+    for (const auto& btn : buttons) {
+        renderButton(btn, 0.3f, 0.05f, 0.05f);
     }
 }
 
 void Menu::renderVictoryMenu(Renderer& renderer) {
+    static float victoryPulse = 0.0f;
+    victoryPulse += 0.04f;
+    
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_LIGHTING);
     glMatrixMode(GL_PROJECTION);
@@ -408,48 +436,57 @@ void Menu::renderVictoryMenu(Renderer& renderer) {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     
-    glColor4f(0.0f, 0.2f, 0.0f, 0.9f);
+    // Green victory background
+    float greenPulse = 0.05f + 0.03f * sin(victoryPulse);
     glBegin(GL_QUADS);
+    glColor3f(0.0f, greenPulse, 0.0f);
     glVertex2f(0, 0);
     glVertex2f(screenWidth, 0);
+    glColor3f(0.0f, 0.0f, 0.05f);
     glVertex2f(screenWidth, screenHeight);
     glVertex2f(0, screenHeight);
     glEnd();
     
-    renderer.renderText("YOU ESCAPED!", screenWidth / 2 - 100, 200, 0.2f, 1.0f, 0.2f);
-    renderer.renderText("The truth about your father awaits...", screenWidth / 2 - 150, 250, 0.8f, 0.8f, 0.8f);
+    // Victory panel
+    glColor4f(0.0f, 0.2f, 0.0f, 0.85f);
+    glBegin(GL_QUADS);
+    glVertex2f(screenWidth/2 - 400, 100);
+    glVertex2f(screenWidth/2 + 400, 100);
+    glVertex2f(screenWidth/2 + 400, 320);
+    glVertex2f(screenWidth/2 - 400, 320);
+    glEnd();
     
-    for (const auto& button : buttons) {
-        float g = button.hovered ? 0.8f : 0.5f;
-        
-        glColor3f(0.2f, g, 0.2f);
-        glBegin(GL_QUADS);
-        glVertex2f(button.x, button.y);
-        glVertex2f(button.x + button.width, button.y);
-        glVertex2f(button.x + button.width, button.y + button.height);
-        glVertex2f(button.x, button.y + button.height);
-        glEnd();
-        
-        renderer.renderText(button.text, button.x + 20, button.y + 20, 1.0f, 1.0f, 1.0f);
+    float titleGlow = 0.6f + 0.4f * sin(victoryPulse * 2);
+    glColor3f(0.2f, titleGlow, 0.2f);
+    glRasterPos2i(screenWidth/2 - 150, 160);
+    
+    glColor3f(0.7f, 0.7f, 0.7f);
+    glRasterPos2i(screenWidth/2 - 250, 220);
+    
+    glColor3f(0.6f, 0.8f, 0.6f);
+    glRasterPos2i(screenWidth/2 - 200, 270);
+    
+    for (const auto& btn : buttons) {
+        renderButton(btn, 0.05f, 0.25f, 0.05f);
     }
 }
 
 void Menu::handleClick(int x, int y) {
-    for (auto& button : buttons) {
-        if (isPointInButton(x, y, button)) {
-            button.onClick();
+    for (auto& btn : buttons) {
+        if (isPointInButton(x, y, btn)) {
+            btn.onClick();
             break;
         }
     }
 }
 
 void Menu::handleMouseMove(int x, int y) {
-    for (auto& button : buttons) {
-        button.hovered = isPointInButton(x, y, button);
+    for (auto& btn : buttons) {
+        btn.hovered = isPointInButton(x, y, btn);
     }
 }
 
-bool Menu::isPointInButton(int x, int y, const MenuButton& button) {
-    return x >= button.x && x <= button.x + button.width &&
-           y >= button.y && y <= button.y + button.height;
+bool Menu::isPointInButton(int x, int y, const MenuButton& btn) {
+    return x >= btn.x && x <= btn.x + btn.width &&
+           y >= btn.y && y <= btn.y + btn.height;
 }
