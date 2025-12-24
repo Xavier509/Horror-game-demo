@@ -93,8 +93,6 @@ bool Game::initialize() {
 }
 
 void Game::run() {
-    std::cout << "Entering game loop" << std::endl;
-    int frameCount = 0;
     while (running) {
         Uint32 currentTime = SDL_GetTicks();
         float deltaTime = (currentTime - lastTime) / 1000.0f;
@@ -108,14 +106,6 @@ void Game::run() {
         render();
         
         SDL_GL_SwapWindow(window);
-        
-        frameCount++;
-        if (frameCount % 60 == 0) {  // Print every second
-            std::cout << "Frame: " << frameCount << std::endl;
-        }
-        if (frameCount >= 600) {  // Exit after ~10 seconds at 60fps
-            running = false;
-        }
     }
 }
 
@@ -137,6 +127,10 @@ void Game::handleEvents() {
                 currentState = GameState::PLAYING;
                 inputHandler->setMouseGrabbed(true);
             }
+        }
+        
+        if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_q) {
+            running = false;
         }
         
         if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) {
