@@ -2,9 +2,15 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "Build Game",
+            "type": "shell",
+            "command": "./build.sh",
+            "group": "build"
+        },
+        {
             "label": "Run Game with VNC",
             "type": "shell",
-            "command": "sudo apt update && sudo apt install -y novnc && Xvfb :99 -screen 0 1280x720x24 & sleep 2 && export DISPLAY=:99 && x11vnc -display :99 -forever -shared -rfbport 5900 -nopw & sleep 2 && websockify --web /usr/share/novnc/ 6080 localhost:5900 & sleep 2 && ./build/MansionHorror",
+            "command": "sudo apt update && sudo apt install -y novnc && Xvfb :99 -screen 0 1280x720x24 & sleep 2 && DISPLAY=:99 x11vnc -display :99 -forever -shared -rfbport 5900 -nopw -noxdamage -ncache 10 & sleep 2 && DISPLAY=:99 websockify --web /usr/share/novnc/ 6080 localhost:5900 & sleep 2 && DISPLAY=:99 ./build/MansionHorror",
             "isBackground": true,
             "group": "build"
         }

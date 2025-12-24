@@ -12,7 +12,7 @@
 Game::Game() 
     : window(nullptr), glContext(nullptr), 
       screenWidth(1280), screenHeight(720),
-      running(false), currentState(GameState::MAIN_MENU),
+      running(false), currentState(GameState::PLAYING),
       controlMode(ControlMode::DESKTOP), lastTime(0) {
 }
 
@@ -35,8 +35,8 @@ bool Game::initialize() {
     // Create window
     window = SDL_CreateWindow(
         "Mansion Horror - 2003",
-        SDL_WINDOWPOS_CENTERED,
-        SDL_WINDOWPOS_CENTERED,
+        0,
+        0,
         screenWidth,
         screenHeight,
         SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN
@@ -47,10 +47,18 @@ bool Game::initialize() {
         return false;
     }
     
+    SDL_RaiseWindow(window);
+    
     // Create OpenGL context
     glContext = SDL_GL_CreateContext(window);
     if (!glContext) {
         std::cerr << "OpenGL context creation failed: " << SDL_GetError() << std::endl;
+        return false;
+    }
+    
+    // Make context current
+    if (SDL_GL_MakeCurrent(window, glContext) < 0) {
+        std::cerr << "Failed to make OpenGL context current: " << SDL_GetError() << std::endl;
         return false;
     }
     
@@ -62,6 +70,7 @@ bool Game::initialize() {
     renderer->initialize();
     
     inputHandler = std::make_unique<InputHandler>();
+    inputHandler->setMouseGrabbed(true);
     menu = std::make_unique<Menu>(this);
     audioManager = std::make_unique<AudioManager>();
     audioManager->initialize();
@@ -84,6 +93,8 @@ bool Game::initialize() {
 }
 
 void Game::run() {
+    std::cout << "Entering game loop" << std::endl;
+    int frameCount = 0;
     while (running) {
         Uint32 currentTime = SDL_GetTicks();
         float deltaTime = (currentTime - lastTime) / 1000.0f;
@@ -97,6 +108,14 @@ void Game::run() {
         render();
         
         SDL_GL_SwapWindow(window);
+        
+        frameCount++;
+        if (frameCount % 60 == 0) {  // Print every second
+            std::cout << "Frame: " << frameCount << std::endl;
+        }
+        if (frameCount >= 600) {  // Exit after ~10 seconds at 60fps
+            running = false;
+        }
     }
 }
 
