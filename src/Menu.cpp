@@ -247,6 +247,54 @@ void Menu::renderButton(const MenuButton& btn, float baseR, float baseG, float b
     glRasterPos2i(textX, textY + 12);
 }
 
+void Menu::renderButton(const MenuButton& btn, float baseR, float baseG, float baseB) {
+    static float animTime = 0.0f;
+    animTime += 0.05f;
+    
+    float hoverBoost = btn.hovered ? 0.3f : 0.0f;
+    float pulse = btn.hovered ? 0.1f * sin(animTime * 3.0f) : 0.0f;
+    
+    // Button shadow
+    glColor4f(0.0f, 0.0f, 0.0f, 0.5f);
+    glBegin(GL_QUADS);
+    glVertex2f(btn.x + 4, btn.y + 4);
+    glVertex2f(btn.x + btn.width + 4, btn.y + 4);
+    glVertex2f(btn.x + btn.width + 4, btn.y + btn.height + 4);
+    glVertex2f(btn.x + 4, btn.y + btn.height + 4);
+    glEnd();
+    
+    // Button background
+    glColor3f(baseR + hoverBoost + pulse, baseG + hoverBoost + pulse, baseB + hoverBoost + pulse);
+    glBegin(GL_QUADS);
+    glVertex2f(btn.x, btn.y);
+    glVertex2f(btn.x + btn.width, btn.y);
+    glVertex2f(btn.x + btn.width, btn.y + btn.height);
+    glVertex2f(btn.x, btn.y + btn.height);
+    glEnd();
+    
+    // Button border
+    glColor3f(0.8f, 0.8f, 0.8f);
+    glLineWidth(2.0f);
+    glBegin(GL_LINE_LOOP);
+    glVertex2f(btn.x, btn.y);
+    glVertex2f(btn.x + btn.width, btn.y);
+    glVertex2f(btn.x + btn.width, btn.y + btn.height);
+    glVertex2f(btn.x, btn.y + btn.height);
+    glEnd();
+    
+    // Button text
+    int textX = btn.x + (btn.width - btn.text.length() * 8) / 2;
+    int textY = btn.y + (btn.height - 16) / 2;
+    
+    // Text shadow
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glRasterPos2i(textX + 2, textY + 14);
+    
+    // Text
+    glColor3f(1.0f, 1.0f, 1.0f);
+    glRasterPos2i(textX, textY + 12);
+}
+
 void Menu::renderMainMenu(Renderer& renderer) {
     static float titlePulse = 0.0f;
     titlePulse += 0.03f;
